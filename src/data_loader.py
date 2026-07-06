@@ -1,36 +1,37 @@
-import pandas as pd
 from pathlib import Path
+import pandas as pd
 
 
-def fetch_customer_data(data_version="v1"):
+def load_data(version="v1"):
     """
-    Reads the Telco customer churn dataset for a given version.
+    Load dataset based on version.
 
     Parameters
     ----------
-    data_version : str, optional
-        Which version of the dataset to load (e.g., 'v1', 'v2', 'v3').
-        Default is 'v1'.
+    version : str
+        Dataset version (v1, v2, v3)
 
     Returns
     -------
-    pd.DataFrame
-        Loaded dataset as a pandas DataFrame.
+    pandas.DataFrame
     """
-    base_dir = Path(__file__).resolve().parents[1]
-    data_path = base_dir / "data" / data_version / "Telco-Customer-Churn.csv"
 
-    if not data_path.is_file():
-        raise OSError(f"Unable to locate dataset at:\n{data_path}")
+    project_root = Path(__file__).resolve().parent.parent
 
-    df = pd.read_csv(data_path)
+    file_path = project_root / "data" / version / "Telco-Customer-Churn.csv"
 
-    print(f"[INFO] Successfully loaded version: {data_version}")
-    print(f"[INFO] Dataset dimensions: {df.shape[0]} rows, {df.shape[1]} columns")
+    if not file_path.exists():
+        raise FileNotFoundError(f"Dataset not found:\n{file_path}")
+
+    df = pd.read_csv(file_path)
+
+    print(f"Loaded {version} dataset")
+    print(f"Shape: {df.shape}")
 
     return df
 
-
 if __name__ == "__main__":
-    data = fetch_customer_data("v1")
-    print(data.head())
+
+    df = load_data("v1")
+
+    print(df.head())

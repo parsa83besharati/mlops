@@ -5,6 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
+from evaluate import evaluate_all_models
 
 RANDOM_STATE = 42
 
@@ -162,6 +163,14 @@ if __name__ == "__main__":
     
     # Train all models
     trained_models = train_all_models(X_train, y_train)
+
+    evaluation_results = evaluate_all_models(
+        trained_models,
+        X_val,
+        y_val,
+        X_test,
+        y_test
+    )
     
     # Display final results
     print("\n" + "=" * 60)

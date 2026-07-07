@@ -1,0 +1,39 @@
+{
+  "dataframe_records": [
+    {
+      "Tenure Months": 12,
+      "Monthly Charges": 75.5,
+      "Total Charges": 906.0,
+      "Gender_Male": 1,
+      "Senior Citizen_Yes": 0,
+      "Partner_Yes": 1,
+      "Dependents_Yes": 0,
+      "Phone Service_Yes": 1,
+      "Multiple Lines_No phone service": 0,
+      "Multiple Lines_Yes": 1,
+      "Internet Service_Fiber optic": 1,
+      "Internet Service_No": 0,
+      "Online Security_No internet service": 0,
+      "Online Security_Yes": 1,
+      "Online Backup_No internet service": 0,
+      "Online Backup_Yes": 1,
+      "Device Protection_No internet service": 0,
+      "Device Protection_Yes": 1,
+      "Tech Support_No internet service": 0,
+      "Tech Support_Yes": 1,
+      "Streaming TV_No internet service": 0,
+      "Streaming TV_Yes": 1,
+      "Streaming Movies_No internet service": 0,
+      "Streaming Movies_Yes": 1,
+      "Contract_One year": 1,
+      "Contract_Two year": 0,
+      "Paperless Billing_Yes": 1,
+      "Payment Method_Credit card (automatic)": 1,
+      "Payment Method_Electronic check": 0,
+      "Payment Method_Mailed check": 0,
+      "Avg Monthly Charge": 75.5,
+      "Is New Customer": 0,
+      "High Monthly Charge": 0
+    }
+  ]
+}

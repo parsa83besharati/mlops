@@ -5,7 +5,7 @@ import sys
 
 import mlflow.xgboost
 import mlflow.catboost
-
+import shutil
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
 
@@ -30,7 +30,7 @@ from evaluate import (
 from mlflow_utils import (
     setup_mlflow,
     log_model_run,
-    
+    log_confusion_matrix
 )
 
 
@@ -151,6 +151,32 @@ def main():
             is_best=is_best
         )
 
+    deployment_path = Path("deployment_model")
+
+    if deployment_path.exists():
+        shutil.rmtree(deployment_path)
+    
+    best_model = trained_models[best_model_name]["model"]
+
+    if best_model_name == "XGBoost":
+        mlflow.xgboost.save_model(
+            xgb_model=best_model,
+            path=str(deployment_path)
+        )
+
+    elif best_model_name == "CatBoost":
+        mlflow.catboost.save_model(
+            cb_model=best_model,
+            path=str(deployment_path)
+    )
+            
+    else:
+        mlflow.sklearn.save_model(
+            sk_model=best_model,
+            path=str(deployment_path),
+            serialization_format="pickle"
+    )
+    
 
     # ----------------------------------
     # Find Best Model

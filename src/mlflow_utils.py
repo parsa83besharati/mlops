@@ -2,9 +2,12 @@ import mlflow
 import mlflow.sklearn
 import mlflow.xgboost
 import mlflow.catboost
+
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
-from sklearn.metrics import confusion_matrix
+
+import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
 
 EXPERIMENT_NAME = "Customer Churn Prediction"
 
@@ -16,17 +19,21 @@ def setup_mlflow():
     mlflow.set_experiment(EXPERIMENT_NAME)
 
 
-def log_confusion_matrix_values(model, X_test, y_test):
+def log_confusion_matrix(model, model_name, X_test, y_test):
     """
-    Log confusion matrix values as metrics (no image saved).
+    Save Confusion Matrix as MLflow Artifact.
     """
-    y_pred = model.predict(X_test)
-    tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
-    
-    mlflow.log_metric("confusion_tn", tn)
-    mlflow.log_metric("confusion_fp", fp)
-    mlflow.log_metric("confusion_fn", fn)
-    mlflow.log_metric("confusion_tp", tp)
+
+    disp = ConfusionMatrixDisplay.from_estimator(
+        model,
+        X_test,
+        y_test,
+        cmap="Blues"
+    )
+
+    plt.tight_layout()
+
+    plt.close()
 
 
 def log_model_run(
@@ -86,30 +93,45 @@ def log_model_run(
         # Cross Validation
         # ==========================
 
-        mlflow.log_metric("cv_f1", metrics["cv_score"])
+        mlflow.log_metric(
+            "cv_f1",
+            metrics["cv_score"]
+        )
 
         # ==========================
         # Save Model
         # ==========================
 
         if isinstance(model, XGBClassifier):
-            mlflow.xgboost.log_model(
+
+            model_info= mlflow.xgboost.log_model(
                 xgb_model=model,
                 artifact_path="model"
             )
+
         elif isinstance(model, CatBoostClassifier):
-            mlflow.catboost.log_model(
+
+            model_info= mlflow.catboost.log_model(
                 cb_model=model,
                 artifact_path="model"
             )
+
         else:
-            mlflow.sklearn.log_model(
+
+            model_info= mlflow.sklearn.log_model(
                 sk_model=model,
-                artifact_path="model"
+                artifact_path="model",
+                serialization_format="pickle"
             )
 
+        
         # ==========================
-        # Log Confusion Matrix Values (no image)
+        # Save Confusion Matrix
         # ==========================
 
-        log_confusion_matrix_values(model, X_test, y_test)
+        log_confusion_matrix(
+            model,
+            model_name,
+            X_test,
+            y_test
+        )
